@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "textlint-scripts build",
-    "test": "textlint-scripts test",
+    "test": "npx ts-node test/index.test.ts",
     "lint": "textlint-scripts lint",
     "prepublish": "yarn run --if-present build"
   },
@@ -16,8 +16,10 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@textlint/textlint-plugin-markdown": "^15.2.2",
     "@textlint/types": "^15.2.2",
     "@types/node": "^24.3.1",
+    "textlint-rule-no-todo": "^2.0.1",
     "textlint-scripts": "^15.2.2",
     "textlint-tester": "^15.2.2",
     "ts-node": "^10.9.2",

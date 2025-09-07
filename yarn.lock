@@ -918,7 +918,7 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@textlint/ast-node-types@15.2.2":
+"@textlint/ast-node-types@15.2.2", "@textlint/ast-node-types@^15.2.1":
   version "15.2.2"
   resolved "https://registry.yarnpkg.com/@textlint/ast-node-types/-/ast-node-types-15.2.2.tgz#450632e54d08fc6776a620671a0ae29bb6cec08b"
   integrity sha512-9ByYNzWV8tpz6BFaRzeRzIov8dkbSZu9q7IWqEIfmRuLWb2qbI/5gTvKcoWT1HYs4XM7IZ8TKSXcuPvMb6eorA==
@@ -1000,7 +1000,7 @@
   dependencies:
     "@textlint/ast-node-types" "15.2.2"
 
-"@textlint/textlint-plugin-markdown@15.2.2":
+"@textlint/textlint-plugin-markdown@15.2.2", "@textlint/textlint-plugin-markdown@^15.2.2":
   version "15.2.2"
   resolved "https://registry.yarnpkg.com/@textlint/textlint-plugin-markdown/-/textlint-plugin-markdown-15.2.2.tgz#6d6f2ebee043ba40726d3fe2eeeac282a06f881a"
   integrity sha512-JzmHAtC2C4LOpJ/JD2YsqBZt9ej4khFFDI0d9E6P9y9AO/HOEv4GeT7aAjGGPG6AVO977aGiJ92EK9kTwlVnIQ==
@@ -2526,6 +2526,22 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+textlint-rule-helper@^2.0.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/textlint-rule-helper/-/textlint-rule-helper-2.5.0.tgz#d31ff25a6de66ccb9d1a473a114f5d411f305b90"
+  integrity sha512-QIbFPtyqLy0g5BJn8mryk9iHzGYicNaFIpLFPiEnb4RXxrEGeQ2W2aARQ9yEXLIAqo+OwK4ndWBAWkbgJEPzTQ==
+  dependencies:
+    "@textlint/ast-node-types" "^15.2.1"
+    structured-source "^4.0.0"
+    unist-util-visit "^2.0.3"
+
+textlint-rule-no-todo@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/textlint-rule-no-todo/-/textlint-rule-no-todo-2.0.1.tgz#86351ed3521ce8faa3b8224f88887f3cecbf2920"
+  integrity sha512-+adoWaBgoTN2g0WNcrERhVq7gdPKQIf1z7Ol+6XwMGv8XmuoFp5vJljHKtCmJBmGhBihjty2b8oaza2MY6UNlw==
+  dependencies:
+    textlint-rule-helper "^2.0.0"
+
 textlint-scripts@^15.2.2:
   version "15.2.2"
   resolved "https://registry.yarnpkg.com/textlint-scripts/-/textlint-scripts-15.2.2.tgz#f9105c66ddfff4727435707e1f9392c1a81f992a"
@@ -2660,6 +2676,15 @@ unist-util-visit-parents@^3.0.0:
   dependencies:
     "@types/unist" "^2.0.0"
     unist-util-is "^4.0.0"
+
+unist-util-visit@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/unist-util-visit/-/unist-util-visit-2.0.3.tgz#c3703893146df47203bb8a9795af47d7b971208c"
+  integrity sha512-iJ4/RczbJMkD0712mGktuGpm/U4By4FfDonL7N/9tATGIF4imikjOuagyMY53tnZq3NP6BcmlrHhEKAfGWjh7Q==
+  dependencies:
+    "@types/unist" "^2.0.0"
+    unist-util-is "^4.0.0"
+    unist-util-visit-parents "^3.0.0"
 
 update-browserslist-db@^1.1.3:
   version "1.1.3"
