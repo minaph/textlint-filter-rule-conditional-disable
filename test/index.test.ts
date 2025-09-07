@@ -1,7 +1,6 @@
 // test/index.test.ts
 const assert = require("node:assert/strict");
-import { TextLintCore } from "@textlint/legacy-textlint-core"
-console.log({TextLintCore});
+const { TextLintCore } = require("@textlint/legacy-textlint-core");
 const markdown = require("@textlint/textlint-plugin-markdown").default;
 const noTodo = require("textlint-rule-no-todo").default;
 // ビルド成果物を参照（lib/index.js）
@@ -19,7 +18,7 @@ async function main() {
   // valid 1: 次の行の '- [ ]' にだけ no-todo を無効化
   {
     const text =
-      "<!-- disable no-todo for /\\- \\[ \\]/ -->\n" +
+      "<!-- disable no-todo for /- \\[ \\]/ -->\n" +
       "- [ ] this list item looks like TODO but should be allowed";
     const { messages } = await lintMarkdown(text);
     assert.equal(messages.length, 0, "filter should suppress no-todo for the next line match");
@@ -45,7 +44,7 @@ async function main() {
   // invalid 2: 次の行のみ無効化され、それ以降の行は通常どおり検出される
   {
     const text =
-      "<!-- disable no-todo for /\\- \\[ \\]/ -->\n" +
+      "<!-- disable no-todo for /- \\[ \\]/ -->\n" +
       "- [ ] allowed by filter\n\n" +
       "- [ ] should be reported";
     const { messages } = await lintMarkdown(text);
