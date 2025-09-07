@@ -21,7 +21,7 @@ const rule: TextlintRuleModule = (context) => {
         if (!line) {
           const ruleIds = splitRules(rawRules);
           const disableAll = ruleIds.length === 1 && ruleIds[0] === "*";
-          const detail = `rules=[${ruleIds.join(", ")}] disableAll=${disableAll} pattern=${pattern} nextLine=<none>`;
+          const detail = `rules=[${ruleIds.join(", ")}] disableAll=${disableAll} nextLine=<none>`;
           report(
             node,
             new RuleError(
@@ -40,7 +40,7 @@ const rule: TextlintRuleModule = (context) => {
           const ruleIds = splitRules(rawRules);
           const disableAll = ruleIds.length === 1 && ruleIds[0] === "*";
           const preview = targetLine.length > 120 ? `${targetLine.slice(0, 117)}...` : targetLine;
-          const detail = `rules=[${ruleIds.join(", ")}] disableAll=${disableAll} pattern=${pattern} nextLine=${JSON.stringify(preview)} length=${targetLine.length}`;
+          const detail = `rules=[${ruleIds.join(", ")}] disableAll=${disableAll} nextLine=${JSON.stringify(preview)}`;
           report(
             node,
             new RuleError(
