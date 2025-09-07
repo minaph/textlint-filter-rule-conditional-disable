@@ -1,0 +1,29 @@
+{
+  "name": "textlint-filter-disable-directives",
+  "version": "1.0.0",
+  "description": "A textlint filter rule that disables specific directives by comments",
+  "author": "Yuki Mino <yukikaze.0511@gmail.com>",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "textlint-scripts build",
+    "test": "textlint-scripts test",
+    "lint": "textlint-scripts lint",
+    "prepublish": "yarn run --if-present build"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@textlint/types": "^15.2.2",
+    "@types/node": "^24.3.1",
+    "textlint-scripts": "^15.2.2",
+    "textlint-tester": "^15.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@textlint/regexp-string-matcher": "^2.0.2"
+  }
+}
