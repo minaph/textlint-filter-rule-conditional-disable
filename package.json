@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "textlint-scripts build",
-    "test": "npx ts-node test/index.test.ts",
+    "test": "npx ts-mocha -p tsconfig.json test/index.test.ts",
     "lint": "textlint-scripts lint",
     "prepublish": "yarn run --if-present build"
   },
