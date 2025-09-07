@@ -23,7 +23,7 @@ function splitRules(s: string): string[] {
 }
 
 const reporter: TextlintFilterRuleModule = (context) => {
-  const { Syntax, getSource, shouldIgnore, RuleError, locator } = context;
+  const { Syntax, getSource, shouldIgnore } = context;
 
   return {
     [Syntax.Document](node) {
@@ -45,11 +45,8 @@ const reporter: TextlintFilterRuleModule = (context) => {
         // targetLine 内の一致範囲（相対オフセット）を列挙
         const matches = matchPatterns(targetLine, [pattern]);
         if (!matches.length) {
-          // 指定パターンが次行にヒットしない場合はエラーを投げる（位置はドキュメント先頭からの相対）
-          throw new RuleError(
-            `conditional-disable: 指定パターン ${pattern} は次の行に一致しません`,
-            { padding: locator.range([m.index, m.index + m[0].length]) }
-          );
+          // 未マッチ時はフィルタ側では何もしない（エラーはルール側がreport）
+          continue;
         }
 
         const ruleIds = splitRules(rawRules);
@@ -67,6 +64,10 @@ const reporter: TextlintFilterRuleModule = (context) => {
             }
           }
         }
+
+        // 条件部がマッチしたディレクティブ定義範囲は、検証ルールのみ抑制する
+        const directiveRange: [number, number] = [m.index, m.index + m[0].length];
+        shouldIgnore(directiveRange, { ruleId: "conditional-disable/validate-directive" } as any);
       }
     }
   };
