@@ -1,6 +1,6 @@
 import type { TextlintRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
-import { DIRECTIVE_RE, lineRangeAfter, splitRules } from "../module";
+import { DIRECTIVE_RE, lineRangeAfter, splitRules } from "../../module/module";
 
 const rule: TextlintRuleModule = (context) => {
   const { Syntax, getSource, report, RuleError, locator } = context;

@@ -1,0 +1,39 @@
+{
+  "name": "textlint-filter-rule-conditional-disable",
+  "version": "1.0.0",
+  "description": "A textlint filter rule that disables specific directives by comments",
+  "author": "Yuki Mino <yukikaze.0511@gmail.com>",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "textlint-scripts build",
+    "test": "npx ts-mocha -p tsconfig.json 'test/**/*.test.ts'",
+    "lint": "textlint-scripts lint",
+    "prepublish": "yarn run --if-present build"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@textlint/ast-node-types": "^15.2.2",
+    "@textlint/legacy-textlint-core": "^15.2.2",
+    "@textlint/textlint-plugin-markdown": "^15.2.2",
+    "@textlint/types": "^15.2.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.3.1",
+    "mocha": "^11.7.2",
+    "textlint": "^15.2.2",
+    "textlint-rule-no-todo": "^2.0.1",
+    "textlint-rule-report-node-types": "^1.1.0",
+    "textlint-scripts": "^15.2.2",
+    "textlint-tester": "^15.2.2",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@textlint/regexp-string-matcher": "^2.0.2"
+  }
+}
