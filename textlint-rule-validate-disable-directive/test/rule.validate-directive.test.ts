@@ -1,10 +1,8 @@
-// test/rule.validate-directive.test.ts
 import assert from "node:assert/strict";
 import { TextLintCore } from "@textlint/legacy-textlint-core";
 import markdown from "@textlint/textlint-plugin-markdown";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import rule from "../src/rules/conditional-disable-validate-directive";
+
+import rule from "../src/conditional-disable-validate-directive";
 
 async function lintMarkdown(text: string) {
   const core = new TextLintCore();
@@ -12,6 +10,7 @@ async function lintMarkdown(text: string) {
   core.setupRules({ "conditional-disable/validate-directive": rule });
   return core.lintText(text, ".md");
 }
+
 
 describe("rule: conditional-disable/validate-directive", () => {
   it("未マッチならディレクティブ定義範囲でreport（次行なし）", async () => {
