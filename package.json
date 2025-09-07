@@ -1,5 +1,5 @@
 {
-  "name": "textlint-filter-disable-directives",
+  "name": "textlint-filter-rule-conditional-disable",
   "version": "1.0.0",
   "description": "A textlint filter rule that disables specific directives by comments",
   "author": "Yuki Mino <yukikaze.0511@gmail.com>",
