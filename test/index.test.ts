@@ -3,11 +3,10 @@ import assert from "node:assert/strict";
 import { TextLintCore } from "@textlint/legacy-textlint-core";
 import markdown from "@textlint/textlint-plugin-markdown";
 import noTodo from "textlint-rule-no-todo";
-// ビルド成果物を参照（lib/index.js）
-// ts-mocha から TypeScript で実行するため import 形式
+// フィルタは src を直接読み込む（ts-mocha 実行時にTSを解決）
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import conditionalDisable from "../lib/index.js";
+import conditionalDisable from "../src/index";
 
 async function lintMarkdown(text: string) {
   const core = new TextLintCore();
@@ -32,15 +31,10 @@ describe("textlint-filter-rule-conditional-disable", () => {
     assert.equal(messages.length, 0);
   });
 
-  it("未マッチのディレクティブは RuleError を投げる", async () => {
+  it("未マッチのディレクティブでは抑止されず、次行は通常どおり検出される", async () => {
     const text = "<!-- disable no-todo for /NOTHING/ -->\n- [ ] string";
-    await assert.rejects(
-      () => lintMarkdown(text),
-      (err: any) => {
-        assert.match(String(err?.message ?? err), /conditional-disable: 指定パターン \/NOTHING\//);
-        return true;
-      }
-    );
+    const { messages } = await lintMarkdown(text);
+    assert.equal(messages.length, 1);
   });
 
   it("次行のみ無効化され、以降の行は検出される", async () => {
@@ -54,33 +48,23 @@ describe("textlint-filter-rule-conditional-disable", () => {
     assert.equal(messages[0].column, 3);
   });
 
-  // 追加 1: '*' 指定で未マッチ時にエラー
-  it("'*' 指定でパターン未マッチなら RuleError", async () => {
+  // 追加 1: '*' 指定で未マッチ時でも、対象行に検出対象が無ければ0件
+  it("'*' 指定でパターン未マッチでも、対象行に検出対象が無ければメッセージは0件", async () => {
     const text = "<!-- disable * for /NOTHING/ -->\nThis is a line";
-    await assert.rejects(
-      () => lintMarkdown(text),
-      (err: any) => {
-        assert.match(String(err?.message ?? err), /conditional-disable: 指定パターン \/NOTHING\//);
-        return true;
-      }
-    );
+    const { messages } = await lintMarkdown(text);
+    assert.equal(messages.length, 0);
   });
 
-  // 追加 2: 複数ディレクティブの2つ目未マッチでエラー
-  it("複数ディレクティブのうち2つ目が未マッチなら RuleError", async () => {
+  // 追加 2: 複数ディレクティブのうち2つ目が未マッチなら、その次行は検出される
+  it("複数ディレクティブのうち2つ目が未マッチなら、その次行は検出される", async () => {
     const text = [
       "<!-- disable no-todo for /- \\[ \\]/ -->",
       "- [ ] allowed by first directive",
       "<!-- disable no-todo for /NOTHING/ -->",
       "- [ ] this will cause error due to second directive"
     ].join("\n");
-    await assert.rejects(
-      () => lintMarkdown(text),
-      (err: any) => {
-        assert.match(String(err?.message ?? err), /conditional-disable: 指定パターン \/NOTHING\//);
-        return true;
-      }
-    );
+    const { messages } = await lintMarkdown(text);
+    assert.equal(messages.length, 1);
   });
 
   // 追加 3: '*' 指定でマッチ時は全ルール抑止される
