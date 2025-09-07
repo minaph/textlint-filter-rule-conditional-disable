@@ -1,65 +1,94 @@
 // test/index.test.ts
-const assert = require("node:assert/strict");
-const { TextLintCore } = require("@textlint/legacy-textlint-core");
-const markdown = require("@textlint/textlint-plugin-markdown").default;
-const noTodo = require("textlint-rule-no-todo").default;
+import assert from "node:assert/strict";
+import { TextLintCore } from "@textlint/legacy-textlint-core";
+import markdown from "@textlint/textlint-plugin-markdown";
+import noTodo from "textlint-rule-no-todo";
 // ビルド成果物を参照（lib/index.js）
-const conditionalDisable = require("../lib/index.js");
+// ts-mocha から TypeScript で実行するため import 形式
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import conditionalDisable from "../lib/index.js";
 
 async function lintMarkdown(text: string) {
   const core = new TextLintCore();
   core.setupPlugins({ markdown });
   core.setupRules({ "no-todo": noTodo });
-  core.setupFilterRules({ "conditional-disable": conditionalDisable });
+  core.setupFilterRules({ "conditional-disable": conditionalDisable as any });
   return core.lintText(text, ".md");
 }
 
-async function main() {
-  // valid 1: 次の行の '- [ ]' にだけ no-todo を無効化
-  {
+describe("textlint-filter-rule-conditional-disable", () => {
+  it("次行の '- [ ]' にだけ no-todo を無効化できる", async () => {
     const text =
       "<!-- disable no-todo for /- \\[ \\]/ -->\n" +
       "- [ ] this list item looks like TODO but should be allowed";
     const { messages } = await lintMarkdown(text);
-    assert.equal(messages.length, 0, "filter should suppress no-todo for the next line match");
-  }
+    assert.equal(messages.length, 0);
+  });
 
-  // valid 2: 別の行（スコープ外）は通常どおり通る（エラーが無いテキスト）
-  {
+  it("スコープ外の行は通常どおり（エラーなしのテキスト）", async () => {
     const text = "This line has no TODO-like pattern.";
     const { messages } = await lintMarkdown(text);
     assert.equal(messages.length, 0);
-  }
+  });
 
-  // invalid 1: パターンがマッチしない指示は抑制しない
-  {
+  it("未マッチのディレクティブは RuleError を投げる", async () => {
     const text = "<!-- disable no-todo for /NOTHING/ -->\n- [ ] string";
-    const { messages } = await lintMarkdown(text);
-    assert.ok(messages.length >= 1, "no-todo should report when pattern does not match");
-    // 位置の一例（実装差異に依存するため厳密比較はしないが、先頭の1件は2行3列付近のはず）
-    assert.equal(messages[0].line, 2);
-    assert.equal(messages[0].column, 3);
-  }
+    await assert.rejects(
+      () => lintMarkdown(text),
+      (err: any) => {
+        assert.match(String(err?.message ?? err), /conditional-disable: 指定パターン \/NOTHING\//);
+        return true;
+      }
+    );
+  });
 
-  // invalid 2: 次の行のみ無効化され、それ以降の行は通常どおり検出される
-  {
+  it("次行のみ無効化され、以降の行は検出される", async () => {
     const text =
       "<!-- disable no-todo for /- \\[ \\]/ -->\n" +
       "- [ ] allowed by filter\n\n" +
       "- [ ] should be reported";
     const { messages } = await lintMarkdown(text);
-    assert.equal(messages.length, 1, "only later occurrence should be reported");
+    assert.equal(messages.length, 1);
     assert.equal(messages[0].line, 4);
     assert.equal(messages[0].column, 3);
-  }
+  });
 
-  // 簡易完了表示
-  // eslint-disable-next-line no-console
-  console.log("All tests passed.");
-}
+  // 追加 1: '*' 指定で未マッチ時にエラー
+  it("'*' 指定でパターン未マッチなら RuleError", async () => {
+    const text = "<!-- disable * for /NOTHING/ -->\nThis is a line";
+    await assert.rejects(
+      () => lintMarkdown(text),
+      (err: any) => {
+        assert.match(String(err?.message ?? err), /conditional-disable: 指定パターン \/NOTHING\//);
+        return true;
+      }
+    );
+  });
 
-main().catch((e) => {
-  // eslint-disable-next-line no-console
-  console.error(e);
-  process.exit(1);
+  // 追加 2: 複数ディレクティブの2つ目未マッチでエラー
+  it("複数ディレクティブのうち2つ目が未マッチなら RuleError", async () => {
+    const text = [
+      "<!-- disable no-todo for /- \\[ \\]/ -->",
+      "- [ ] allowed by first directive",
+      "<!-- disable no-todo for /NOTHING/ -->",
+      "- [ ] this will cause error due to second directive"
+    ].join("\n");
+    await assert.rejects(
+      () => lintMarkdown(text),
+      (err: any) => {
+        assert.match(String(err?.message ?? err), /conditional-disable: 指定パターン \/NOTHING\//);
+        return true;
+      }
+    );
+  });
+
+  // 追加 3: '*' 指定でマッチ時は全ルール抑止される
+  it("'*' 指定でマッチ時は全ルールが抑止される", async () => {
+    const text =
+      "<!-- disable * for /- \\[ \\]/ -->\n" +
+      "- [ ] this list item looks like TODO but should be allowed";
+    const { messages } = await lintMarkdown(text);
+    assert.equal(messages.length, 0);
+  });
 });

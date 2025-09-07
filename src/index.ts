@@ -4,7 +4,7 @@ import { matchPatterns } from "@textlint/regexp-string-matcher";
 // <!-- disable <RULES> for /REGEX/flags -->
 // 例: <!-- disable no-todo for /TODO(\\s*[:：].*)?/i -->
 const DIRECTIVE_RE =
-  /<!--\s*disable\s+([*@\w\-/.,]+)\s+for\s+(\/(?:\\\/|[^/])+\/[a-zA-Z]*)\s*-->/g;
+  /disable\s+([*@\w\-/.,]+)\s+for\s+(\/(?:\\\/|[^/])+\/[a-zA-Z]*)/g;
 
 /** 1行の [start,end) 絶対オフセットを返す */
 function lineRangeAfter(text: string, indexAfter: number): [number, number] | null {
@@ -23,12 +23,15 @@ function splitRules(s: string): string[] {
 }
 
 const reporter: TextlintFilterRuleModule = (context) => {
-  const { Syntax, getSource, shouldIgnore } = context;
+  const { Syntax, getSource, shouldIgnore, RuleError, locator } = context;
 
   return {
     [Syntax.Document](node) {
       const text = getSource(node);
       if (!text) return;
+
+      // /g の状態をリセット
+      DIRECTIVE_RE.lastIndex = 0;
 
       for (let m; (m = DIRECTIVE_RE.exec(text)); ) {
         const rawRules = m[1]; // "ruleA,ruleB" or "*" など
@@ -41,7 +44,13 @@ const reporter: TextlintFilterRuleModule = (context) => {
 
         // targetLine 内の一致範囲（相対オフセット）を列挙
         const matches = matchPatterns(targetLine, [pattern]);
-        if (!matches.length) continue;
+        if (!matches.length) {
+          // 指定パターンが次行にヒットしない場合はエラーを投げる（位置はドキュメント先頭からの相対）
+          throw new RuleError(
+            `conditional-disable: 指定パターン ${pattern} は次の行に一致しません`,
+            { padding: locator.range([m.index, m.index + m[0].length]) }
+          );
+        }
 
         const ruleIds = splitRules(rawRules);
         const disableAll = ruleIds.length === 1 && ruleIds[0] === "*";
@@ -51,7 +60,7 @@ const reporter: TextlintFilterRuleModule = (context) => {
           const absEnd = lineStart + mk.endIndex;
 
           if (disableAll) {
-            shouldIgnore([absStart, absEnd], {} as any); // 全ルール抑止
+            shouldIgnore([absStart, absEnd], { ruleId: "*" } as any); // 全ルール抑止
           } else {
             for (const ruleId of ruleIds) {
               shouldIgnore([absStart, absEnd], { ruleId });
