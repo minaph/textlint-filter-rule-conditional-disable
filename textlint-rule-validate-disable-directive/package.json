@@ -34,6 +34,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@textlint/regexp-string-matcher": "^2.0.2"
+    "@textlint/regexp-string-matcher": "^2.0.2",
+    "textlint-conditional-disable-module": "^1.0.0"
   }
 }

@@ -1,8 +1,9 @@
 {
     "name": "textlint-conditional-disable",
     "workspaces": [
-        "textlint-filter-rule-conditional-disable/",
-        "textlint-rule-validate-disable-directive/"
+        "textlint-filter-rule-conditional-disable",
+        "textlint-rule-validate-disable-directive",
+        "module"
     ],
     "private": true
 }
