@@ -6,12 +6,13 @@
   ],
   "shell": {
     "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
+      "yarn install"
     ],
     "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
-      ]
+      "build": ["yarn workspaces run build"],
+      "test": ["yarn workspaces run test"],
+      "lint": ["yarn workspaces run lint"],
+      "prepublish": ["yarn workspaces run prepublish"]
     }
   }
 }
