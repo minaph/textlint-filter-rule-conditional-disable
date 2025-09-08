@@ -13,11 +13,12 @@ const reporter: TextlintFilterRuleModule = (context) => {
     [Syntax.Document](node) {
       const text = getSource(node);
       if (!text) return;
+      const directiveRE = DIRECTIVE_RE();
 
       // /g の状態をリセット
-      DIRECTIVE_RE.lastIndex = 0;
+      directiveRE.lastIndex = 0;
 
-      for (let m; (m = DIRECTIVE_RE.exec(text)); ) {
+      for (let m; (m = directiveRE.exec(text)); ) {
         const rawRules = m[1]; // "ruleA,ruleB" or "*" など
         const pattern = m[2]; // "/.../flags"
 
@@ -48,15 +49,6 @@ const reporter: TextlintFilterRuleModule = (context) => {
             }
           }
         }
-
-        // 条件部がマッチしたディレクティブ定義範囲は、検証ルールのみ抑制する
-        const directiveRange: [number, number] = [
-          m.index,
-          m.index + m[0].length,
-        ];
-        shouldIgnore(directiveRange, {
-          ruleId: "conditional-disable/validate-directive",
-        } as any);
       }
     },
   };

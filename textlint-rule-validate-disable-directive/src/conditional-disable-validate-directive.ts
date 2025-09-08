@@ -9,10 +9,11 @@ const rule: TextlintRuleModule = (context) => {
     [Syntax.Document](node) {
       const text = getSource(node);
       if (!text) return;
+      const directiveRE = DIRECTIVE_RE();
 
-      DIRECTIVE_RE.lastIndex = 0;
+      directiveRE.lastIndex = 0;
 
-      for (let m; (m = DIRECTIVE_RE.exec(text)); ) {
+      for (let m; (m = directiveRE.exec(text)); ) {
         const rawRules = m[1]; // "ruleA,ruleB" or "*" など
         const pattern = m[2];  // "/.../flags"
         const directiveRange: [number, number] = [m.index, m.index + m[0].length];

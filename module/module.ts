@@ -1,7 +1,7 @@
 
 // <!-- disable <RULES> for /REGEX/flags -->
 // 例: <!-- disable no-todo for /TODO(\\s*[:：].*)?/i -->
-export const DIRECTIVE_RE = /disable\s+([*@\w\-\/.,]+)\s+for\s+(\/(?:\\\/|[^\/])+\/[a-zA-Z]*)/g;/** 1行の [start,end) 絶対オフセットを返す */
+export const DIRECTIVE_RE = () => /disable\s+([*@\w\-\/.,]+)\s+for\s+(\/(?:\\\/|[^\/])+\/[a-zA-Z]*)/g;/** 1行の [start,end) 絶対オフセットを返す */
 export function lineRangeAfter(text: string, indexAfter: number): [number, number] | null {
   // コメント終端の次の改行を探す（コメント行をスキップ）
   const eolOfComment = text.indexOf("\n", indexAfter);

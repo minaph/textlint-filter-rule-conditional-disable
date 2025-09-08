@@ -17,7 +17,7 @@ describe("rule: conditional-disable/validate-directive", () => {
     const text = "<!-- disable no-todo for /NOTHING/ -->"; // 次行がない
     const { messages } = await lintMarkdown(text);
     assert.equal(messages.length, 1);
-    assert.match(messages[0].message, /次の行に一致しません/);
+    assert.match(messages[0].message, /nextLine=<none>/);
   });
 
   it("未マッチならディレクティブ定義範囲でreport（次行あり）", async () => {
