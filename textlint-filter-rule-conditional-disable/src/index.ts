@@ -22,6 +22,11 @@ const reporter: TextlintFilterRuleModule = (context) => {
         const rawRules = m[1]; // "ruleA,ruleB" or "*" など
         const pattern = m[2]; // "/.../flags"
 
+        // ディレクティブ自体の占有範囲を全ルールから保護
+        const directiveStart = m.index;
+        const directiveEnd = m.index + m[0].length;
+        shouldIgnore([directiveStart, directiveEnd], { ruleId: "*" } as any);
+
         const line = lineRangeAfter(text, m.index + m[0].length);
         if (!line) continue;
         const [lineStart, lineEnd] = line;
