@@ -25,7 +25,7 @@ const rule: TextlintRuleModule = (context) => {
           report(
             node,
             new RuleError(
-              `conditional-disable: 指定パターン ${pattern} は次の行に一致しません (${detail})`,
+              `conditional-disable: 次の行がみつかりませんでした (${detail})`,
               { padding: locator.range(directiveRange) }
             )
           );

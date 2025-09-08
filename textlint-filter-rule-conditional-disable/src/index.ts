@@ -1,6 +1,10 @@
 import type { TextlintFilterRuleModule } from "@textlint/types";
 import { matchPatterns } from "@textlint/regexp-string-matcher";
-import { DIRECTIVE_RE, lineRangeAfter, splitRules } from "textlint-conditional-disable-module";
+import {
+  DIRECTIVE_RE,
+  lineRangeAfter,
+  splitRules,
+} from "textlint-conditional-disable-module";
 
 const reporter: TextlintFilterRuleModule = (context) => {
   const { Syntax, getSource, shouldIgnore } = context;
@@ -15,7 +19,7 @@ const reporter: TextlintFilterRuleModule = (context) => {
 
       for (let m; (m = DIRECTIVE_RE.exec(text)); ) {
         const rawRules = m[1]; // "ruleA,ruleB" or "*" など
-        const pattern = m[2];  // "/.../flags"
+        const pattern = m[2]; // "/.../flags"
 
         const line = lineRangeAfter(text, m.index + m[0].length);
         if (!line) continue;
@@ -46,10 +50,15 @@ const reporter: TextlintFilterRuleModule = (context) => {
         }
 
         // 条件部がマッチしたディレクティブ定義範囲は、検証ルールのみ抑制する
-        const directiveRange: [number, number] = [m.index, m.index + m[0].length];
-        shouldIgnore(directiveRange, { ruleId: "conditional-disable/validate-directive" } as any);
+        const directiveRange: [number, number] = [
+          m.index,
+          m.index + m[0].length,
+        ];
+        shouldIgnore(directiveRange, {
+          ruleId: "conditional-disable/validate-directive",
+        } as any);
       }
-    }
+    },
   };
 };
 

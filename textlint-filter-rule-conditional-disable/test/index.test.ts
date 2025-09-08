@@ -3,9 +3,7 @@ import assert from "node:assert/strict";
 import { TextLintCore } from "@textlint/legacy-textlint-core";
 import markdown from "@textlint/textlint-plugin-markdown";
 import noTodo from "textlint-rule-no-todo";
-// フィルタは src を直接読み込む（ts-mocha 実行時にTSを解決）
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+
 import conditionalDisable from "../src/index";
 
 async function lintMarkdown(text: string) {
