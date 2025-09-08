@@ -26,7 +26,7 @@ const rule: TextlintRuleModule = (context) => {
           report(
             node,
             new RuleError(
-              `conditional-disable: 次の行がみつかりませんでした (${detail})`,
+              `次の行がみつかりませんでした (${detail})`,
               { padding: locator.range(directiveRange) }
             )
           );
@@ -41,11 +41,11 @@ const rule: TextlintRuleModule = (context) => {
           const ruleIds = splitRules(rawRules);
           const disableAll = ruleIds.length === 1 && ruleIds[0] === "*";
           const preview = targetLine.length > 120 ? `${targetLine.slice(0, 117)}...` : targetLine;
-          const detail = `rules=[${ruleIds.join(", ")}] disableAll=${disableAll} nextLine=${JSON.stringify(preview)}`;
+          const detail = `rules=[${ruleIds.join(", ")}] disableAll=${disableAll} pattern=${pattern} nextLine=${JSON.stringify(preview)}`;
           report(
             node,
             new RuleError(
-              `conditional-disable: 指定パターン ${pattern} は次の行に一致しません (${detail})`,
+              `指定パターンは次の行に一致しません (${detail})`,
               { padding: locator.range(directiveRange) }
             )
           );

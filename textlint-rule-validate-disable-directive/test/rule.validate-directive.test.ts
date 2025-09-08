@@ -25,7 +25,7 @@ describe("rule: conditional-disable/validate-directive", () => {
     const { messages } = await lintMarkdown(text);
     assert.equal(messages.length, 1);
     assert.match(messages[0].message, /rules=\[no-todo\]/);
-    assert.match(messages[0].message, /指定パターン \/NOTHING\//);
+    assert.match(messages[0].message, /pattern=\/NOTHING\//);
   });
 
   it("'*' 指定で未マッチでもディレクティブ定義範囲でreport", async () => {
@@ -54,7 +54,7 @@ describe("rule: conditional-disable/validate-directive", () => {
     ].join("\n");
     const { messages } = await lintMarkdown(text);
     assert.equal(messages.length, 1);
-    assert.match(messages[0].message, /指定パターン \/NOTHING\//);
+    assert.match(messages[0].message, /pattern=\/NOTHING\//);
   });
 });
 
